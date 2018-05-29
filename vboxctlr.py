@@ -52,9 +52,11 @@ class VMController:
     @controller_subtype.setter
     def controller_subtype(self, controller_subtype: str):
         if not self.__controller_type:
-            raise VMControllerError("Controller type must be set before setting subtype")
+            raise VMControllerError(
+                "Controller type must be set before setting subtype"
+            )
 
-        if controller_subtype in self.__controller_types[self.__controller_type]:
+        if controller_subtype in self.controller_types[self.__controller_type]:
             self.__controller_subtype = controller_subtype
         else:
             raise VMControllerError(
@@ -100,16 +102,15 @@ class VMController:
         if device in self.__devices:
             del self.__devices[self.__disks.index(device)]
         else:
-            raise DiskNotFoundError("No such disk on the controller")
+            raise DeviceNotFoundError("No such disk on the controller")
 
 
 class VMDevice:
-    DEVICE_TYPES = [
-        'Hard', 'Floppy', 'ISO', 'DVD/CDROM', 'USB'
-    ]
-    def __init__(self):
-        self.__controller = None
-        self.controller_port = None
+    DEVICE_TYPES = ["Hard", "Floppy", "ISO", "DVD/CDROM", "USB"]
+
+    def __init__(self, parent_controller):
+        self.__parent_controller = None
+        self.__controller_port = None
         self.__title = ""
         self.__name = None
         self.__path = None
@@ -120,7 +121,7 @@ class VMDevice:
         self.disk_type = None
 
     def __repr__(self):
-        disk_info = dict(
+        device_info = dict(
             title=self.__title,
             name=self.__name,
             uuid=self.__uuid,
@@ -129,12 +130,13 @@ class VMDevice:
             allocated=self.__bytes_allocated,
             dynamic="Yes" if self.__is_dynamic else "No",
         )
-        return "Title:{title}\nName:{name}\nUuid:{uuid}\nPath:{path}\nDefined bytes{bytes}\nAllocated Bytes{allocated}\nDynamic{dynamic}".format(
-            disk_info
-        )
+        repr_text = "Title:{title}\nName:{name}\nUuid:{uuid}\nPath:{path}\n"
+        "Defined bytes{bytes}\nAllocated Bytes{allocated}\nDynamic{dynamic}"
+        output = repr_text.format(device_info)
+        return output
 
 
-class DiskNotFoundError(Exception):
+class DeviceNotFoundError(Exception):
     pass
 
 

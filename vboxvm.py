@@ -1,9 +1,10 @@
 import os
 import sys
 from typing import Dict, List, Tuple
+from vboxnic import VMNic
 
 
-class VBoxVm:
+class VBoxVM:
     """
     A class which basically holds configuration information for a VM
     """
@@ -12,7 +13,9 @@ class VBoxVm:
         self.boot_from = None
         self.system_settings: VMSystem = VMSystem()
         self.general_settings: VMGeneral = VMGeneral()
-        self.controllers: List[VMController] = list(VMController())
+        self.controllers: List[VMController] = [VMController()]
+        self.nics = list()
+        self.nics.append(VMNic(self))
 
 
 class VMGeneral:
@@ -75,9 +78,9 @@ class VMDisplay:
 class VMMedia:
 
     def __init__(self):
-        self.hard_disks: List[VMHardDisk] = None
-        self.controllers: List[VMController] = None
-        self.usb_filters: List[VMUsb] = None
+        self.__media_type = None
+        self.__controller = None
+        hard_disks: List[VMHardDisk] = None
 
 from vboxctlr import VMController
 

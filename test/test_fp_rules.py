@@ -56,4 +56,16 @@ class PortForwardingRulesTestCase(unittest.TestCase):
             "Rule 1:12222->22\nRule 2:12223->23\nRule 3:12224->24\nRule 4:12225->25\nRule 5:12226->26"
         )
 
+    def test_removing_multiple_rules(self):
+        host_port_start = 12222
+        guest_port_start = 22
+        for i in range(0, 3):
+            fp = ForwardedPort()
+            fp.set_fp_rule(None, None, host_port_start + i, None, guest_port_start + i)
+            self.fpr.add_rule(fp)
+        self.assertEqual(self.fpr.rule_count(), 3)
+        for i in range(0,3):
+            self.fpr.remove_rule('Rule {}'.format(i + 1))
+        self.assertEqual(self.fpr.rule_count(), 0)
+
 

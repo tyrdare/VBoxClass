@@ -5,7 +5,11 @@ from typing import List
 class FPRules:
     pass
 
+# Empty class so FPRules will work.  mypy static type-checking requires this
+class VBoxNic:
+    pass
 
+# Note - Port forwarding is only enabled for NAT'd adapters
 class ForwardedPort:
 
     def __init__(self):
@@ -91,13 +95,13 @@ class ForwardedPort:
 
     @host_port.setter
     def host_port(self, port: int):
-        if port and port > 0:
-            if isinstance(port, int):
+        if isinstance(port, int):
+            if port > 0:
                 self.__host_port = port
             else:
-                raise TypeError("Port must be an integer")
+                raise ValueError("Port must be a positive integer")
         else:
-            raise ValueError("Port must be a positive integer")
+            raise TypeError("Port must be an integer")
 
     @property
     def guest_port(self) -> int:
@@ -124,11 +128,12 @@ class ForwardedPort:
 
 
 class FPRules:
-    """Bag to hold Forwarded Ports"""
+    """Bag to hold Forwarded Port rules"""
 
     def __init__(self):
         self.__rules: List[ForwardedPort] = list()
         self.__rule_names = list()
+        self.__parent_adapter = None
 
     def add_rule(self, rule: ForwardedPort):
         rule_name = ""
