@@ -3,6 +3,7 @@ import logging
 from vboxvm import VBoxVM
 from forwardedport import FPRules
 
+logging.basicConfig(level=logging.INFO)
 
 class TestVmNicTestCase(unittest.TestCase):
 
@@ -69,16 +70,16 @@ class TestVmNicTestCase(unittest.TestCase):
         self.assertIsInstance(mac_addr, str)
         self.assertEqual(len(mac_addr), 12)
         self.assertTrue(re.search(r'[0-9a-f]{12}', mac_addr), )
-        logging.warning(mac_addr)
+        logging.info(mac_addr)
 
     def test_nic__nic_types(self):
         self.assertIsInstance(self.nic.nic_types(), list)
         self.assertEqual(self.nic.nic_types(), self.nic.nic_brands)
-        logging.warning(self.nic.nic_types())
+        logging.info(self.nic.nic_types())
 
     def test_nic__net_attach_types(self):
         self.assertIsInstance(self.nic.net_attach_types(), list)
         self.assertEqual(self.nic.net_attach_types(), self.nic.network_attach_types)
-        logging.warning(self.nic.net_attach_types())
+        logging.info(self.nic.net_attach_types())
 
 
